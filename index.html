@@ -54,11 +54,10 @@ footer{text-align:center;color:var(--mut);padding:8px 16px 24px;font-size:15px}
 </head>
 <body>
 <header><h1>Perfumes San Pla</h1><p>Decants originales. Prueba el aroma antes de comprar el frasco.</p></header>
-<div class="promo">2x1 en decants esta semana</div>
 <main>
   <div id="grid"></div>
 </main>
-<footer>@perfumes_san_pla<br>Promo válida hasta el sábado 21 de noviembre o hasta agotar existencias<br>Precios en pesos mexicanos</footer>
+<footer>@perfumes_san_pla<br>Precios en pesos mexicanos</footer>
 <div id="bar"><button id="open"></button></div>
 <div id="sheet" role="dialog" aria-modal="true" aria-label="Tu pedido"><div id="panel"></div></div>
 <script>
@@ -86,7 +85,7 @@ function calc(){
   var u=[],n=0;
   Object.keys(cart).forEach(function(k){var s=+k.split("|")[1];for(var i=0;i<cart[k];i++){u.push(byId(k.split("|")[0]).p[s]);n++}});
   u.sort(function(a,b){return b-a});
-  var full=0,pay=0;u.forEach(function(v,i){full+=v;if(i%2===0)pay+=v});
+  var full=0,pay=0;u.forEach(function(v){full+=v;pay+=v});
   return {n:n,full:full,pay:pay,save:full-pay};
 }
 function name(id){return P.filter(function(p){return p.id===id})[0].n}
@@ -97,10 +96,8 @@ function ui(){
   if(!$("sheet").classList.contains("on"))return;
   var keys=Object.keys(cart);
   if(!keys.length){$("panel").innerHTML='<h2>Tu pedido</h2><p>Aún no has agregado decants.</p><div class="sec"><button id="close">Seguir viendo</button></div>';return}
-  var msg="Hola, quiero pedir en Perfumes San Pla:%0A"+keys.map(function(k){var a=k.split("|");return "- "+cart[k]+" x "+name(a[0])+" "+a[1]+" ml"}).join("%0A")+"%0ATotal: "+money(c.pay)+(c.save?" (promo 2x1 aplicada)":"");
+  var msg="Hola, quiero pedir en Perfumes San Pla:%0A"+keys.map(function(k){var a=k.split("|");return "- "+cart[k]+" x "+name(a[0])+" "+a[1]+" ml"}).join("%0A")+"%0ATotal: "+money(c.pay);
   $("panel").innerHTML='<h2>Tu pedido</h2>'+keys.map(function(k){var a=k.split("|");return '<div class="ln"><span>'+name(a[0])+', '+a[1]+' ml</span><div class="q"><button data-m="'+k+'" aria-label="Quitar uno">-</button><b>'+cart[k]+'</b><button data-p="'+k+'" aria-label="Agregar uno">+</button></div></div>'}).join("")+
-  '<div class="tot"><span>Subtotal</span><span>'+money(c.full)+'</span></div>'+
-  (c.save?'<div class="tot save"><span>Promo 2x1</span><span>-'+money(c.save)+'</span></div>':'<div class="tot"><span>Agrega otro decant y paga solo el de mayor precio</span></div>')+
   '<div class="tot big"><span>Total</span><span>'+money(c.pay)+'</span></div>'+
   '<a id="wa" href="https://wa.me/'+WA+'?text='+msg+'" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>'+
   '<div class="sec"><button id="close">Seguir comprando</button><button id="clr">Vaciar</button></div>';
